@@ -1,6 +1,13 @@
 import React from 'react';
 
-import {View, Text, Button, TextInput, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  TextInput,
+  FlatList,
+  StyleSheet,
+} from 'react-native';
 
 export class TodoList extends React.Component {
   constructor(props) {
@@ -26,56 +33,78 @@ export class TodoList extends React.Component {
 
   render() {
     return (
-      <View>
-        <View>
+      <View style={styles.main}>
+        <View style={styles.list}>
           <FlatList
             data={this.state.todos}
             renderItem={({item, index}) => {
-              // console.log(item);
-              // console.log(index);
               return (
-                <Text
-                  style={{
-                    color: 'blue',
-                  }}>
-                  {index + ' ' + item}
-                </Text>
+                <View style={styles.todos}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                    }}>
+                    {index + ' ' + item}
+                  </Text>
+                </View>
               );
             }}
           />
         </View>
-        <TextInput
-          onChangeText={value => {
-            this.setState({
-              todo: value,
-            });
-          }}
-          value={this.state.todo}
-        />
-        <Button
-          onPress={() => {
-            console.log('pressed me');
-            this.addNewTodo();
-          }}
-          title="Add new todo"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
+        <View style={styles.add}>
+          <TextInput
+            style={styles.input}
+            onChangeText={value => {
+              this.setState({
+                todo: value,
+              });
+            }}
+            value={this.state.todo}
+          />
+          <Button
+            onPress={() => {
+              console.log('pressed me');
+              this.addNewTodo();
+            }}
+            title="Add new todo"
+            color="#841584"
+            accessibilityLabel="Learn more about this purple button"
+          />
+        </View>
       </View>
     );
   }
 }
 
-/*
-<input
-          type="text"
-          value={this.state.todo}
-          onChange={event => {
-            // console.log(event.target.value);
-            this.setState({
-              todo: event.target.value,
-            });
-          }}
-        />
-        <button onClick={this.addNewTodo}>Agregar</button>
-        */
+const styles = StyleSheet.create({
+  main: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: 'blueviolet',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+  list: {
+    width: 300,
+    flex: 2,
+    backgroundColor: 'aqua',
+  },
+  add: {
+    flex: 1,
+    width: 300,
+    backgroundColor: 'beige',
+  },
+  todos: {
+    flex: 1,
+    width: 300,
+    backgroundColor: 'beige',
+  },
+});
