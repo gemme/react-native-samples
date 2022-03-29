@@ -32,8 +32,17 @@ export const BookRow = props => {
       <View style={styles.edges}>
         <TouchableOpacity
           onPress={() => {
-            setShowInfo(prevShowInfo => {
-              return !prevShowInfo;
+            // setShowInfo(prevShowInfo => {
+            //   return !prevShowInfo;
+            // });
+            props.navigation.navigate('Info', {
+              book: {
+                image: props.image,
+                title: props.title,
+                author: props.author,
+                rating: props.rating,
+                id: props.id,
+              },
             });
           }}
           style={styles.button}>
