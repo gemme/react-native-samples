@@ -1,7 +1,9 @@
 import * as React from 'react';
+import {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 export function BookRow(props) {
+  const [info, setInfo] = useState(null);
   return (
     <View
       style={[
@@ -19,9 +21,19 @@ export function BookRow(props) {
       </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => console.log('pressed')}>
-        <Text>{'Info'}</Text>
+        onPress={() => {
+          setInfo('info ' + props.id);
+          console.log('pressed');
+        }}>
+        <View style={styles.edges}>
+          <Text>{'Info'}</Text>
+        </View>
       </TouchableOpacity>
+      {info && (
+        <View>
+          <Text>{info}</Text>
+        </View>
+      )}
     </View>
   );
 }
