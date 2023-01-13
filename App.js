@@ -15,39 +15,23 @@ import {
   useColorScheme,
   View,
   TextInput,
+  ScrollView,
+  FlatList,
 } from 'react-native';
 import {MyList} from './src/components/MyList';
-import {Counter} from './src/components/Counter';
+import {Counter} from 'components/Counter';
 import {FetchStarWars} from './src/components/FetchStarWars';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {BookRow} from 'components/BookRow';
 
-const books = [
+/* const books = [
   {title: 'El Perfume', author: 'Patrick Süskind'},
   {title: 'La insoportable levedad del ser', author: 'Milan Kundera'},
   {title: 'Azteca', author: 'Gary Jennings'},
   {title: 'Cerebro de Broca', author: 'Carl Sagan'},
-];
+]; */
 
 const App = () => {
-  // div --- View
-  // Text
-  /* return (
-    <SafeAreaView style={styles.container}>
-      <Text>{'hello world'}</Text>
-      <View
-        style={{
-          flex: 1,
-        }}>
-        <MyList />
-      </View>
-      <View style={styles.subContainer}>
-        <Counter />
-      </View>
-      <View style={styles.subContainer}>
-        <FetchStarWars />
-      </View>
-    </SafeAreaView>
-  ); */
   const [search, setSearch] = useState('');
   const [books, setBooks] = useState([]);
   /* useEffect(() => {
@@ -56,8 +40,9 @@ const App = () => {
       .then(v => {
         setBooks(v);
       });
-  }); */
-  /* useEffect(() => {
+  }, []); */
+  useEffect(() => {
+    // {"where":{"title":  { "like": "%Azteca%" }  }  }
     fetch(
       'http://localhost:3000/api/Books?filter=%7B%22where%22%3A%7B%22title%22%3A%7B%22like%22%3A%22%25' +
         search +
@@ -67,7 +52,7 @@ const App = () => {
       .then(v => {
         setBooks(v);
       });
-  }, [search]); */
+  }, [search]);
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>{'Book Review'}</Text>
@@ -79,33 +64,42 @@ const App = () => {
         value={search}
         placeholder="Search"
       />
-      {books
-        /* .filter(book => {
-          const lowerCaseTitle = book.title.toLocaleLowerCase();
-          return lowerCaseTitle.indexOf(search.toLocaleLowerCase()) > -1;
-        }) */
-        .map((v, index) => {
-          return (
-            <View
-              style={[
-                styles.row,
-                {
-                  backgroundColor: index % 2 ? 'white' : '#F3F3F7',
-                },
-              ]}>
-              <View style={styles.edges}>
-                <Text>{index + 1}</Text>
+      <FlatList
+        data={books}
+        renderItem={({item}) => (
+          <BookRow id={item.id} title={item.title} author={item.author} />
+        )}
+        keyExtractor={item => item.id}
+      />
+      {/*  <ScrollView>
+        {books
+          .filter(book => {
+            const lowerCaseTitle = book.title.toLocaleLowerCase();
+            return lowerCaseTitle.indexOf(search.toLocaleLowerCase()) > -1;
+          })
+          .map((v, index) => {
+            return (
+              <View
+                style={[
+                  styles.row,
+                  {
+                    backgroundColor: index % 2 ? 'white' : '#F3F3F7',
+                  },
+                ]}>
+                <View style={styles.edges}>
+                  <Text>{index + 1}</Text>
+                </View>
+                <View style={styles.titleBook}>
+                  <Text>{v.title}</Text>
+                  <Text style={styles.author}>{v.author}</Text>
+                </View>
+                <View>
+                  <Text>{'Info'}</Text>
+                </View>
               </View>
-              <View style={styles.titleBook}>
-                <Text>{v.title}</Text>
-                <Text style={styles.author}>{v.author}</Text>
-              </View>
-              <View>
-                <Text>{'Info'}</Text>
-              </View>
-            </View>
-          );
-        })}
+            );
+          })}
+      </ScrollView> */}
     </SafeAreaView>
   );
 };
@@ -117,7 +111,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    alignItems: 'flex-start',
   },
   header: {
     textAlign: 'center',
