@@ -1,7 +1,9 @@
 import * as React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, Button} from 'react-native';
 import {useState, useEffect} from 'react';
 import {Star} from 'components/Star';
+import {ReviewList} from 'components/ReviewList';
+
 export function BookInfo(props) {
   const [book, setBook] = useState({});
   useEffect(() => {
@@ -11,7 +13,7 @@ export function BookInfo(props) {
       .then(data => {
         setBook(data);
       });
-  });
+  }, [props.route.params.bookId]);
   //console.log(props.route);
   return (
     <View style={styles.container}>
@@ -31,8 +33,18 @@ export function BookInfo(props) {
           <Text style={styles.title}>{book.title}</Text>
           <Text style={styles.author}>{book.author}</Text>
           <Star rating={book.rating} />
+          <Button
+            onPress={() => {
+              props.navigation.navigate('AddReview', {
+                bookId: props.route.params.bookId,
+              });
+            }}
+            title="Text Review"
+            color="#841584"
+          />
         </View>
       </View>
+      <ReviewList bookId={props.route.params.bookId} />
     </View>
   );
 }

@@ -12,6 +12,7 @@ import {BookRow} from 'components/BookRow';
 export function BookList(props) {
   const [search, setSearch] = useState('');
   const [books, setBooks] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   /* useEffect(() => {
     fetch('http://localhost:3000/api/Books')
       .then(v => v.json())
@@ -29,8 +30,12 @@ export function BookList(props) {
       .then(v => v.json())
       .then(v => {
         setBooks(v);
+        setRefreshing(false);
+      })
+      .catch(() => {
+        setRefreshing(false);
       });
-  }, [search]);
+  }, [search, refreshing]);
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>{'Book Review'}</Text>
@@ -44,17 +49,24 @@ export function BookList(props) {
       />
       <FlatList
         data={books}
-        renderItem={({item}) => (
-          <BookRow
-            id={item.id}
-            image={item.image}
-            title={item.title}
-            author={item.author}
-            rating={item.rating}
-            navigation={props.navigation}
-          />
-        )}
+        renderItem={({item}) => {
+          console.log('Book row');
+          return (
+            <BookRow
+              id={item.id}
+              image={item.image}
+              title={item.title}
+              author={item.author}
+              rating={item.rating}
+              navigation={props.navigation}
+            />
+          );
+        }}
         keyExtractor={item => item.id}
+        onRefresh={() => {
+          setRefreshing(true);
+        }}
+        refreshing={refreshing}
       />
       {/*  <ScrollView>
         {books
@@ -103,19 +115,6 @@ const styles = StyleSheet.create({
     color: 'red',
     padding: 50,
     fontWeight: '300',
-  },
-  titleBook: {
-    flex: 8,
-    flexDirection: 'column',
-  },
-  author: {color: 'grey'},
-  row: {
-    flexDirection: 'row',
-  },
-  edges: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   input: {
     height: 40,
